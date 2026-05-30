@@ -1,0 +1,89 @@
+public class BookMyShowSegmentTree {
+
+    static int[] tree;
+    static int n = 10;
+
+    static void build(int node, int start, int end, int[] seats) {
+        if (start == end) {
+            tree[node] = seats[start];
+        } else {
+            int mid = (start + end) / 2;
+
+            build(2 * node, start, mid, seats);
+            build(2 * node + 1, mid + 1, end, seats);
+
+            tree[node] = tree[2 * node] + tree[2 * node + 1];
+        }
+    }
+
+    static void update(int node, int start, int end, int idx, int value) {
+        if (start == end) {
+            tree[node] = value;
+        } else {
+            int mid = (start + end) / 2;
+
+            if (idx <= mid)
+                update(2 * node, start, mid, idx, value);
+            else
+                update(2 * node + 1, mid + 1, end, idx, value);
+
+            tree[node] = tree[2 * node] + tree[2 * node + 1];
+        }
+    }
+
+    static int query(int node, int start, int end, int l, int r) {
+        if (r < start || end < l)
+            return 0;
+
+        if (l <= start && end <= r)
+            return tree[node];
+
+        int mid = (start + end) / 2;
+
+        return query(2 * node, start, mid, l, r)
+                + query(2 * node + 1, mid + 1, end, l, r);
+    }
+
+    public static void main(String[] args) {
+
+        int[] seats = {1,1,1,1,1,1,1,1,1,1};
+
+        tree = new int[4 * n];
+
+        build(1, 0, n - 1, seats);
+
+        System.out.println("SEGMENT TREE SEAT RESERVATION\n");
+
+        System.out.println("Initial Seat Status:");
+        for (int seat : seats)
+            System.out.print(seat + " ");
+
+        // Book Seat 3, 7, 9
+        seats[2] = 0;
+        seats[6] = 0;
+        seats[8] = 0;
+
+        update(1, 0, n - 1, 2, 0);
+        update(1, 0, n - 1, 6, 0);
+        update(1, 0, n - 1, 8, 0);
+
+        System.out.println("\n\nUpdated Seat Status:");
+        for (int seat : seats)
+            System.out.print(seat + " ");
+
+        System.out.println("\n");
+
+        System.out.println("Available Seats (1-5): "
+                + query(1, 0, n - 1, 0, 4));
+
+        System.out.println("Available Seats (6-10): "
+                + query(1, 0, n - 1, 5, 9));
+
+        System.out.println("Total Available Seats: "
+                + query(1, 0, n - 1, 0, 9));
+
+        System.out.println("\nTime Complexity:");
+        System.out.println("Update Seat : O(log n)");
+        System.out.println("Range Query : O(log n)");
+    }
+}
