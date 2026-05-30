@@ -1,0 +1,29 @@
+import java.util.TreeSet;
+
+public class RailwayReservation {
+    public static void main(String[] args) {
+
+        TreeSet<Integer> reservations = new TreeSet<>();
+
+        reservations.add(1001);
+        reservations.add(1005);
+        reservations.add(1010);
+        reservations.add(1020);
+        reservations.add(1030);
+        reservations.add(1040);
+        reservations.add(1050);
+
+        System.out.println("Reservation Records:");
+
+        for(Integer id : reservations) {
+            System.out.println(id);
+        }
+
+        int searchId = 1030;
+
+        if(reservations.contains(searchId))
+            System.out.println("\nReservation Found");
+        else
+            System.out.println("\nReservation Not Found");
+    }
+}
